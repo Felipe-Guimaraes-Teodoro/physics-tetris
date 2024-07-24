@@ -1,0 +1,11 @@
+[package]
+name = "ptetris"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chaos-framework = "0.1.1"
+glfw = "0.57.0"
+rand = "0.8.5"
+rapier3d = "0.22.0"
+tokio = "1.39.1"

@@ -78,21 +78,26 @@ pub fn run() {
     renderer.add_light(Light { position: vec3(0., -box_size[1]/2., 0.), color: Vec3::ONE/3. });
     let cam_light = renderer.add_light(Light { position: vec3(0., 0.0, 2.5), color: Vec3::ONE }).unwrap();
 
-    let texture = renderer.add_texture("src/assets/textures/sky.jpeg").unwrap();
+    let sky_texture = renderer.add_texture("src/assets/textures/sky.jpeg").unwrap();
+    let grass_texture = renderer.add_texture("src/assets/textures/grass.png").unwrap();
+    
+    //let grass_texture = renderer.add_texture("src/assets/textures/bad_grass.jpg").unwrap();
 
     let mut sphere = Sphere::new(64, 20., Vec4::ONE).mesh();
     for vertex in sphere.vertices.iter_mut() {
         let normal = vertex.normal;
         vertex.normal = -normal;
     }
-    sphere.set_texture(texture, &renderer);
+    sphere.set_texture(sky_texture, &renderer);
     let sky_ball = renderer.add_mesh(sphere).unwrap();
     renderer.get_mesh_mut(sky_ball).unwrap().set_position(vec3(0.0, -BOX_HEIGHT/2.0-0.01, 0.0));
     
-    let floor = renderer.add_mesh(Quad::new(vec3(100., 100., f32::INFINITY), Vec4::ONE).mesh()).unwrap();
+    let mut quad = Quad::new(vec3(40., 40., f32::INFINITY), Vec4::ONE).mesh();
+    quad.set_texture(grass_texture, &renderer);
+    let floor = renderer.add_mesh(quad).unwrap();
     let floor = renderer.get_mesh_mut(floor).unwrap();
     floor.set_rotation(Quat::from_euler(EulerRot::XYZ, -90.0_f32.to_radians(), 0.0, 0.0));
-    floor.set_position(vec3(-50.0, -BOX_HEIGHT/2.0-0.01, 50.0));
+    floor.set_position(vec3(-20.0, -BOX_HEIGHT/2.0-0.01, 20.0));
 
     let mut game = Game::new();
     
@@ -193,7 +198,7 @@ impl Game {
     pub fn new() -> Self {
         Self {
             current_time: std::time::Instant::now(),
-            spawn_delay: 3.0,
+            spawn_delay: 0.0,
             pieces: vec![],
             gravity: vec3(0.0, -1.0, 0.0)
         }
